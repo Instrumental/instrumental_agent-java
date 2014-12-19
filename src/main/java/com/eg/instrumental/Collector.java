@@ -287,9 +287,6 @@ public final class Collector implements Runnable {
 					byte[] b = (message + "\n").getBytes(ASCII);
 					outputStream.write(b);
 
-					System.out.write(b);
-					System.out.flush();
-
 					bytesWritten += b.length;
 					if (forceFlush || bytesWritten >= 1350) {
 						outputStream.flush();
