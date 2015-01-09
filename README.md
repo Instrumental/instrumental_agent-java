@@ -4,7 +4,7 @@ instrumental-agent-java
 A minimal java agent library for the [Instrumental] logging service without using Statsd.
 This is more or less a direct port of the [Instrumental.net](https://github.com/ralphrodkey/Instrumental.NET) library.
 
-For a more full-featured solution, take a look at using [Dropwizard Metrics](http://dropwizard.io/metrics/) with the [metrics-instrumental](http://www.gihub.com/egineering-llc/metrics-instrumental) reporter.
+For a more full-featured solution, take a look at using [Dropwizard Metrics](http://dropwizard.io/metrics/) with the [metrics-instrumental](http://www.github.com/egineering-llc/metrics-instrumental) reporter.
 
 
 
