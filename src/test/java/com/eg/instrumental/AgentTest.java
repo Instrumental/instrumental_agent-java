@@ -17,7 +17,6 @@ public class AgentTest {
 
 		if (!apiKey.equals("")) {
 			Agent agent = new Agent(apiKey);
-			agent.setSynchronous(false);
 
 			for (int i = 1; i < 20; i++) {
 				float val = r.nextFloat() * 100;
@@ -40,7 +39,6 @@ public class AgentTest {
 
 		if (!apiKey.equals("")) {
 			Agent agent = new Agent(apiKey);
-			agent.setSynchronous(false);
 
 			for (int i = 1; i < 20; i++) {
 				agent.increment("test.increment");
@@ -62,7 +60,6 @@ public class AgentTest {
 
 		if (!apiKey.equals("")) {
 			Agent agent = new Agent(apiKey);
-			agent.setSynchronous(false);
 
 			agent.notice("test.execution", (System.currentTimeMillis() - start) / 1000, start);
 
