@@ -56,8 +56,12 @@ public class Agent {
 	}
 
 
+	public void increment(final String metricName, final Number value, final long time, final long count) {
+		collector.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, count).toString(), synchronous);
+	}
+
 	public void increment(final String metricName, final Number value, final long time) {
-		collector.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, 1).toString(), synchronous);
+		increment(metricName, value, time, 1);
 	}
 
 	public void increment(final String metricName, long time) {
@@ -68,8 +72,12 @@ public class Agent {
 		increment(metricName, System.currentTimeMillis());
 	}
 
+	public void gauge(final String metricName, final Number value, final long time, final long count) {
+		collector.send(new Metric(Metric.Type.GAUGE, metricName, value, time, count).toString(), synchronous);
+	}
+
 	public void gauge(final String metricName, final Number value, final long time) {
-		collector.send(new Metric(Metric.Type.GAUGE, metricName, value, time, 1).toString(), synchronous);
+		gauge(metricName, value, time, 1);
 	}
 
 	public void gauge(final String metricName, final Number value) {
