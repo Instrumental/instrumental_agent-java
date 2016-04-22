@@ -44,6 +44,9 @@ public class Metric {
 		if (time != metric.time) {
 			return false;
 		}
+		if (count != metric.count) {
+			return false;
+		}
 		if (Float.compare(metric.value, value) != 0) {
 			return false;
 		}
@@ -63,6 +66,7 @@ public class Metric {
 		result = 31 * result + (key != null ? key.hashCode() : 0);
 		result = 31 * result + (value != +0.0f ? Float.floatToIntBits(value) : 0);
 		result = 31 * result + (int) (time ^ (time >>> 32));
+		result = 31 * result + (int) (count ^ (count >>> 32));
 		return result;
 	}
 
@@ -83,7 +87,7 @@ public class Metric {
 		}
 
 		String format(final Metric metric) {
-			return this.type + " " + metric.key + " " + metric.value + " " + (metric.time / 1000);
+			return this.type + " " + metric.key + " " + metric.value + " " + (metric.time / 1000) + " " + metric.count;
 		}
 
 		boolean isValid(final String key) {
