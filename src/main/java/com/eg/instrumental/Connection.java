@@ -257,7 +257,7 @@ public final class Connection implements Runnable {
 
 	private void write(String message, boolean forceFlush) throws IOException {
 		// If we 'shutdown', don't do anything
-		if (!shutdown) {
+		if ((!shutdown) && (message != null)) {
 			try {
 				streamLock.lockInterruptibly();
 
