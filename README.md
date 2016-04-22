@@ -26,7 +26,7 @@ Example
     public void run() {
         // Do something....
     });
- agent.notice("Maintenance Now.", 600);
+ agent.notice("Maintenance Now.");
 ```
 
  [Instrumental]:http://instrumentalapp.com
