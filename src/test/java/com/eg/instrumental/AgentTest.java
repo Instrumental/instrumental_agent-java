@@ -1,5 +1,6 @@
 package com.eg.instrumental;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Random;
@@ -68,11 +69,23 @@ public class AgentTest {
 
 			agent.notice("test.execution", (System.currentTimeMillis() - start) / 1000, start);
 
-			while (agent.getPending() > 0) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException ie) {}
-			}
-		}
-	}
+                        while (agent.getPending() > 0) {
+                                try {
+                                        Thread.sleep(100);
+                                } catch (InterruptedException ie) {}
+                        }
+                }
+        }
+
+    @Test
+    public void nonblockingTest() {
+        String apiKey = System.getProperty("instrumentalapp.apikey", "");
+        Agent agent = new Agent(apiKey);
+
+        for (int i = 1; i < (Collector.MAX_QUEUE_SIZE + 1); i++) {
+            agent.increment("test.increment");
+        }
+
+        Assert.assertFalse("Queue buffer overrun when it shouldn't", agent.isQueueOverflowing());
+    }
 }

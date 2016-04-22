@@ -156,4 +156,8 @@ public class Agent {
 	public void notice(final String message, long duration) {
 		notice(message, duration, System.currentTimeMillis());
 	}
+
+    public boolean isQueueOverflowing() {
+        return collector.isQueueOverflowing();
+    }
 }

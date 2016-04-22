@@ -23,7 +23,8 @@ public final class Collector implements Runnable {
 	private static final ThreadFactory collectorThreadFactory = new CollectorThreadFactory();
 
 	private String apiKey;
-	LinkedBlockingDeque<Metric> messages = new LinkedBlockingDeque<Metric>(5000);
+    public static final int MAX_QUEUE_SIZE = 5000;
+	LinkedBlockingDeque<Metric> messages = new LinkedBlockingDeque<Metric>(MAX_QUEUE_SIZE);
 	private Thread worker = null;
 	private Socket socket = null;
 	OutputStream outputStream = null;
@@ -237,6 +238,10 @@ public final class Collector implements Runnable {
 	public boolean isRunning() {
 		return worker != null && worker.isAlive();
 	}
+
+    public boolean isQueueOverflowing() {
+        return queueFullWarned;
+    }
 
 	public void setShutdown(boolean shutdown) {
 		this.shutdown = shutdown;
