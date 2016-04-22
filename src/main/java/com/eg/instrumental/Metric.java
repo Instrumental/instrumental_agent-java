@@ -10,12 +10,14 @@ public class Metric {
 	String key;
 	float value;
 	long time;
+	long count;
 
-	Metric(final Type type, final String key, final Number value, final long time) {
+	Metric(final Type type, final String key, final Number value, final long time, final long count) {
 		this.type = type;
 		this.key = key;
 		this.value = value.floatValue();
 		this.time = time;
+		this.count = count;
 	}
 
 

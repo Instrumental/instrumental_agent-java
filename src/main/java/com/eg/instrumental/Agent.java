@@ -57,7 +57,7 @@ public class Agent {
 
 
 	public void increment(final String metricName, final Number value, final long time) {
-		collector.send(new Metric(Metric.Type.INCREMENT, metricName, value, time), synchronous);
+		collector.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, 1), synchronous);
 	}
 
 	public void increment(final String metricName, long time) {
@@ -69,7 +69,7 @@ public class Agent {
 	}
 
 	public void gauge(final String metricName, final Number value, final long time) {
-		collector.send(new Metric(Metric.Type.GAUGE, metricName, value, time), synchronous);
+		collector.send(new Metric(Metric.Type.GAUGE, metricName, value, time, 1), synchronous);
 	}
 
 	public void gauge(final String metricName, final Number value) {
@@ -150,7 +150,7 @@ public class Agent {
 	}
 
 	public void notice(final String message, long duration, final long time) {
-		collector.send(new Metric(Metric.Type.NOTICE, message, duration, time), synchronous);
+		collector.send(new Metric(Metric.Type.NOTICE, message, duration, time, 1), synchronous);
 	}
 
 	public void notice(final String message, long duration) {

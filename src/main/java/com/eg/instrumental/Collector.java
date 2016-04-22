@@ -90,7 +90,7 @@ public final class Collector implements Runnable {
 					}
 				} catch (IllegalArgumentException iae) {
 					LOG.severe(iae.toString());
-					send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis()), false);
+					send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis(), 1), false);
 				} finally {
 					streamLock.unlock();
 				}
@@ -141,7 +141,7 @@ public final class Collector implements Runnable {
 				// Illegally formatted metric.
 				LOG.severe(iae.toString());
 				metric = null;
-				send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis()), false);
+				send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis(), 1), false);
 			}
 		}
 	}
