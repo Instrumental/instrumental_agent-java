@@ -10,16 +10,14 @@ public class Metric {
 	String key;
 	float value;
 	long time;
+	long count;
 
-	Metric(final Type type, final String key, final Number value, final long time) {
+	Metric(final Type type, final String key, final Number value, final long time, final long count) {
 		this.type = type;
 		this.key = key;
 		this.value = value.floatValue();
 		this.time = time;
-	}
-
-	public static Metric increment(final String key) {
-		return new Metric(Type.INCREMENT, key, 1, System.currentTimeMillis());
+		this.count = count;
 	}
 
 
@@ -74,8 +72,7 @@ public class Metric {
 	 */
 	enum Type {
 		GAUGE("gauge"),
-		INCREMENT("increment"),
-		NOTICE("notice");
+		INCREMENT("increment");
 
 		private static final Pattern NAME_PATTERN = Pattern.compile("^([\\d\\w\\-_])+\\.*[\\d\\w\\-_]+$");
 
@@ -86,19 +83,11 @@ public class Metric {
 		}
 
 		String format(final Metric metric) {
-			if (type.equals("notice")) {
-				return this.type + " " + (metric.time / 1000) + " " + metric.value + " " + metric.key;
-			} else {
-				return this.type + " " + metric.key + " " + metric.value + " " + (metric.time / 1000);
-			}
+			return this.type + " " + metric.key + " " + metric.value + " " + (metric.time / 1000);
 		}
 
 		boolean isValid(final String key) {
-			if (type.equals("notice")) {
-				return key.indexOf("\r") == -1 && key.indexOf("\n") == -1;
-			} else {
-				return NAME_PATTERN.matcher(key).matches();
-			}
+			return NAME_PATTERN.matcher(key).matches();
 		}
 	}
 }

@@ -24,7 +24,7 @@ public final class Collector implements Runnable {
 
 	private String apiKey;
     public static final int MAX_QUEUE_SIZE = 5000;
-	LinkedBlockingDeque<Metric> messages = new LinkedBlockingDeque<Metric>(MAX_QUEUE_SIZE);
+	LinkedBlockingDeque<String> messages = new LinkedBlockingDeque<String>(MAX_QUEUE_SIZE);
 	private Thread worker = null;
 	private Socket socket = null;
 	OutputStream outputStream = null;
@@ -65,8 +65,7 @@ public final class Collector implements Runnable {
 		return apiKey;
 	}
 
-
-	void send(Metric metric, boolean synchronous) {
+	void send(String command, boolean synchronous) {
 		if (worker == null || !worker.isAlive()) {
 			worker = collectorThreadFactory.newThread(this);
 			worker.start();
@@ -78,7 +77,7 @@ public final class Collector implements Runnable {
 				streamLock.lock();
 				try {
 					ensureStream();
-					write(metric, true);
+					write(command, true);
 					success = true;
 				} catch (IOException ioe) {
 					cleanupStream();
@@ -91,14 +90,14 @@ public final class Collector implements Runnable {
 					}
 				} catch (IllegalArgumentException iae) {
 					LOG.severe(iae.toString());
-					send(Metric.increment("agent.invalid_metric"), false);
+					send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis(), 1).toString(), false);
 				} finally {
 					streamLock.unlock();
 				}
 			} while (!success);
 		} else {
 			try {
-				messages.add(metric);
+				messages.add(command);
 				queueFullWarned = false;
 			} catch (IllegalStateException ise) {
 				if (!queueFullWarned) {
@@ -111,7 +110,7 @@ public final class Collector implements Runnable {
 
 	@Override
 	public void run() {
-		Metric metric = null;
+		String command = null;
 		while (!shutdown || !messages.isEmpty()) {
 			// Make sure the socket state is kosher.
 			try {
@@ -122,13 +121,13 @@ public final class Collector implements Runnable {
 
 			// Get the next message off the queue.
 			try {
-				if (metric == null) {
-					metric = messages.poll(5, TimeUnit.SECONDS);
+				if (command == null) {
+					command = messages.poll(5, TimeUnit.SECONDS);
 				}
 
 				// Try to write the message
-				write(metric, false);
-				metric = null;
+				write(command, false);
+				command = null;
 			} catch (InterruptedException ie) {
 				break;
 			} catch (IOException ioe) {
@@ -139,10 +138,10 @@ public final class Collector implements Runnable {
 					break;
 				}
 			} catch (IllegalArgumentException iae) {
-				// Illegally formatted metric.
+				// Illegally formatted command.
 				LOG.severe(iae.toString());
-				metric = null;
-				send(Metric.increment("agent.invalid_metric"), false);
+				command = null;
+				send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis(), 1).toString(), false);
 			}
 		}
 	}

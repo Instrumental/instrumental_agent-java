@@ -57,7 +57,7 @@ public class Agent {
 
 
 	public void increment(final String metricName, final Number value, final long time) {
-		collector.send(new Metric(Metric.Type.INCREMENT, metricName, value, time), synchronous);
+		collector.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, 1).toString(), synchronous);
 	}
 
 	public void increment(final String metricName, long time) {
@@ -69,7 +69,7 @@ public class Agent {
 	}
 
 	public void gauge(final String metricName, final Number value, final long time) {
-		collector.send(new Metric(Metric.Type.GAUGE, metricName, value, time), synchronous);
+		collector.send(new Metric(Metric.Type.GAUGE, metricName, value, time, 1).toString(), synchronous);
 	}
 
 	public void gauge(final String metricName, final Number value) {
@@ -149,12 +149,12 @@ public class Agent {
 		}, result);
 	}
 
-	public void notice(final String message, long duration, final long time) {
-		collector.send(new Metric(Metric.Type.NOTICE, message, duration, time), synchronous);
+	public void notice(final String message, final long time, final long duration) {
+		collector.send(new Notice(message, time, duration).toString(), synchronous);
 	}
 
-	public void notice(final String message, long duration) {
-		notice(message, duration, System.currentTimeMillis());
+	public void notice(final String message, long time) {
+		notice(message, time, 0);
 	}
 
     public boolean isQueueOverflowing() {
