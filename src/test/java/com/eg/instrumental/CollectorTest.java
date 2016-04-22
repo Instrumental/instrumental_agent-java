@@ -18,7 +18,7 @@ public class CollectorTest {
 		Assert.assertFalse(c.isShutdown());
 		Assert.assertFalse(c.isRunning());
 
-		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1), false);
+		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1).toString(), false);
 
 		Assert.assertTrue(c.isRunning());
 		Assert.assertFalse(c.isShutdown());
@@ -37,7 +37,7 @@ public class CollectorTest {
 
 		Assert.assertEquals(0, baos.size());
 
-		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1), true);
+		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1).toString(), true);
 
 		Assert.assertNotEquals(0, baos.size());
 
@@ -57,7 +57,7 @@ public class CollectorTest {
 		Assert.assertFalse(c.isRunning());
 
 		// Lazy start
-		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1), false);
+		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1).toString(), false);
 
 		Assert.assertTrue(c.isRunning());
 		Assert.assertFalse(c.isShutdown());
@@ -75,7 +75,7 @@ public class CollectorTest {
 		Assert.assertFalse(c.isRunning());
 
 		// Lazy re-start
-		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1), false);
+		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1).toString(), false);
 
 		Assert.assertTrue(c.isRunning());
 		Assert.assertFalse(c.isShutdown());

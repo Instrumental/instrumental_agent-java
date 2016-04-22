@@ -72,8 +72,7 @@ public class Metric {
 	 */
 	enum Type {
 		GAUGE("gauge"),
-		INCREMENT("increment"),
-		NOTICE("notice");
+		INCREMENT("increment");
 
 		private static final Pattern NAME_PATTERN = Pattern.compile("^([\\d\\w\\-_])+\\.*[\\d\\w\\-_]+$");
 
@@ -84,19 +83,11 @@ public class Metric {
 		}
 
 		String format(final Metric metric) {
-			if (type.equals("notice")) {
-				return this.type + " " + (metric.time / 1000) + " " + metric.value + " " + metric.key;
-			} else {
-				return this.type + " " + metric.key + " " + metric.value + " " + (metric.time / 1000);
-			}
+			return this.type + " " + metric.key + " " + metric.value + " " + (metric.time / 1000);
 		}
 
 		boolean isValid(final String key) {
-			if (type.equals("notice")) {
-				return key.indexOf("\r") == -1 && key.indexOf("\n") == -1;
-			} else {
-				return NAME_PATTERN.matcher(key).matches();
-			}
+			return NAME_PATTERN.matcher(key).matches();
 		}
 	}
 }
