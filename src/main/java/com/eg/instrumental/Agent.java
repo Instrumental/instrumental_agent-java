@@ -173,6 +173,10 @@ public class Agent {
 		notice(message, time, 0);
 	}
 
+	public void notice(final String message) {
+		notice(message, System.currentTimeMillis(), 0);
+	}
+
   public boolean isQueueOverflowing() {
     return connection.isQueueOverflowing();
   }
