@@ -251,7 +251,7 @@ public final class Connection implements Runnable {
 		// Since we've removed the message from the queue, don't discard it, and don't advance.
 		errors++;
 		long delay = (long) Math.min(maxReconnectDelay, Math.pow(errors++, reconnectBackoff));
-		LOG.severe("Failed to connect to connection.instrumentalapp.com:8000. Retry in " + delay + "ms");
+		LOG.severe("Failed to connect to " + agentOptions.getHost() + ":" + agentOptions.getPort() + ". Retry in " + delay + "ms");
 		Thread.sleep(delay);
 	}
 
