@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+cd "$(dirname "$0")/.."
+
+# check dependencies
+type mvn > /dev/null      || brew install maven
+java -version > /dev/null || (echo "java must be installed"; exit 1)
