@@ -2,9 +2,6 @@ package com.eg.instrumental;
 
 import java.util.regex.Pattern;
 
-/**
- * Created by bvarner on 12/19/14.
- */
 public class Metric {
 	Type type;
 	String key;

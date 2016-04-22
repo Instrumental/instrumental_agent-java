@@ -5,9 +5,6 @@ import org.junit.Test;
 
 import java.util.Random;
 
-/**
- * Created by bvarner on 12/19/14.
- */
 public class AgentTest {
 
 	private static long start = System.currentTimeMillis();

@@ -5,9 +5,6 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 
-/**
- * Created by bvarner on 12/19/14.
- */
 public class CollectorTest {
 
 	@Test
