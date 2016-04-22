@@ -18,10 +18,6 @@ public class Metric {
 		this.time = time;
 	}
 
-	public static Metric increment(final String key) {
-		return new Metric(Type.INCREMENT, key, 1, System.currentTimeMillis());
-	}
-
 
 	@Override
 	public String toString() throws IllegalArgumentException {
