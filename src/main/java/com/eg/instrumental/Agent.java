@@ -173,7 +173,7 @@ public class Agent {
 		notice(message, time, 0);
 	}
 
-    public boolean isQueueOverflowing() {
-        return connection.isQueueOverflowing();
-    }
+  public boolean isQueueOverflowing() {
+    return connection.isQueueOverflowing();
+  }
 }
