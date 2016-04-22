@@ -12,35 +12,35 @@ public class Agent {
 
 	private boolean synchronous = false;
 
-	private Collector collector;
+	private Connection connection;
 
 	public Agent(final String apiKey) {
-		collector = new Collector(apiKey);
+		connection = new Connection(apiKey);
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
-		collector.setShutdown(true);
+		connection.setShutdown(true);
 	}
 
 	public String getApiKey() {
-		return collector.getApiKey();
+		return connection.getApiKey();
 	}
 
 	public void setApiKey(final String apiKey) {
-		collector.setApiKey(apiKey);
+		connection.setApiKey(apiKey);
 	}
 
 	public boolean isRunning() {
-		return collector.isRunning();
+		return connection.isRunning();
 	}
 
 	public boolean getShutdown() {
-		return collector.isShutdown();
+		return connection.isShutdown();
 	}
 
 	public void setShutdown(boolean shutdown) {
-		collector.setShutdown(shutdown);
+		connection.setShutdown(shutdown);
 	}
 
 	public boolean getSynchronous() {
@@ -48,7 +48,7 @@ public class Agent {
 	}
 
 	public int getPending() {
-		return collector.messages.size();
+		return connection.messages.size();
 	}
 
 	public void setSynchronous(boolean synchronous) {
@@ -57,7 +57,7 @@ public class Agent {
 
 
 	public void increment(final String metricName, final Number value, final long time, final long count) {
-		collector.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, count).toString(), synchronous);
+		connection.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, count).toString(), synchronous);
 	}
 
 	public void increment(final String metricName, final Number value, final long time) {
@@ -73,7 +73,7 @@ public class Agent {
 	}
 
 	public void gauge(final String metricName, final Number value, final long time, final long count) {
-		collector.send(new Metric(Metric.Type.GAUGE, metricName, value, time, count).toString(), synchronous);
+		connection.send(new Metric(Metric.Type.GAUGE, metricName, value, time, count).toString(), synchronous);
 	}
 
 	public void gauge(final String metricName, final Number value, final long time) {
@@ -158,7 +158,7 @@ public class Agent {
 	}
 
 	public void notice(final String message, final long time, final long duration) {
-		collector.send(new Notice(message, time, duration).toString(), synchronous);
+		connection.send(new Notice(message, time, duration).toString(), synchronous);
 	}
 
 	public void notice(final String message, long time) {
@@ -166,6 +166,6 @@ public class Agent {
 	}
 
     public boolean isQueueOverflowing() {
-        return collector.isQueueOverflowing();
+        return connection.isQueueOverflowing();
     }
 }

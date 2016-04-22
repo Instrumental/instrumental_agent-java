@@ -79,7 +79,7 @@ public class AgentTest {
         String apiKey = System.getProperty("instrumentalapp.apikey", "");
         Agent agent = new Agent(apiKey);
 
-        for (int i = 1; i < (Collector.MAX_QUEUE_SIZE + 1); i++) {
+        for (int i = 1; i < (Connection.MAX_QUEUE_SIZE + 1); i++) {
             agent.increment("test.increment");
         }
 

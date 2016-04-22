@@ -5,17 +5,17 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 
-public class CollectorTest {
+public class ConnectionTest {
 
 	@Test
-	public void collectorLazyStart() {
-		Collector c = new Collector("foobar");
+	public void connectionLazyStart() {
+		Connection c = new Connection("foobar");
 		c.outputStream = System.out;
 
 		Assert.assertFalse(c.isShutdown());
 		Assert.assertFalse(c.isRunning());
 
-		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1).toString(), false);
+		c.send(new Metric(Metric.Type.GAUGE, "connection.status", 1, 0, 1).toString(), false);
 
 		Assert.assertTrue(c.isRunning());
 		Assert.assertFalse(c.isShutdown());
@@ -27,14 +27,14 @@ public class CollectorTest {
 	}
 
 	@Test
-	public void collectorStreamTest() {
+	public void connectionStreamTest() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Collector c = new Collector("foobar");
+		Connection c = new Connection("foobar");
 		c.outputStream = baos;
 
 		Assert.assertEquals(0, baos.size());
 
-		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1).toString(), true);
+		c.send(new Metric(Metric.Type.GAUGE, "connection.status", 1, 0, 1).toString(), true);
 
 		Assert.assertNotEquals(0, baos.size());
 
@@ -47,14 +47,14 @@ public class CollectorTest {
 	@Test
 	public void restartTest() {
 		// Initialize
-		Collector c = new Collector("foobar");
+		Connection c = new Connection("foobar");
 		c.outputStream = System.out;
 
 		Assert.assertFalse(c.isShutdown());
 		Assert.assertFalse(c.isRunning());
 
 		// Lazy start
-		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1).toString(), false);
+		c.send(new Metric(Metric.Type.GAUGE, "connection.status", 1, 0, 1).toString(), false);
 
 		Assert.assertTrue(c.isRunning());
 		Assert.assertFalse(c.isShutdown());
@@ -72,7 +72,7 @@ public class CollectorTest {
 		Assert.assertFalse(c.isRunning());
 
 		// Lazy re-start
-		c.send(new Metric(Metric.Type.GAUGE, "collector.status", 1, 0, 1).toString(), false);
+		c.send(new Metric(Metric.Type.GAUGE, "connection.status", 1, 0, 1).toString(), false);
 
 		Assert.assertTrue(c.isRunning());
 		Assert.assertFalse(c.isShutdown());

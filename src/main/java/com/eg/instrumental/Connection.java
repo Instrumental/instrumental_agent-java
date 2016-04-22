@@ -14,10 +14,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
-public final class Collector implements Runnable {
+public final class Connection implements Runnable {
 
 	private static final Charset ASCII = Charset.forName("ASCII");
-	private static final ThreadFactory collectorThreadFactory = new CollectorThreadFactory();
+	private static final ThreadFactory connectionThreadFactory = new ConnectionThreadFactory();
 
 	private String apiKey;
     public static final int MAX_QUEUE_SIZE = 5000;
@@ -37,9 +37,9 @@ public final class Collector implements Runnable {
 	private long reconnectBackoff = 2;
 
 
-	private static final Logger LOG = Logger.getLogger(Collector.class.getName());
+	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
 
-	public Collector(final String apiKey) {
+	public Connection(final String apiKey) {
 		this.apiKey = apiKey;
 	}
 
@@ -64,7 +64,7 @@ public final class Collector implements Runnable {
 
 	void send(String command, boolean synchronous) {
 		if (worker == null || !worker.isAlive()) {
-			worker = collectorThreadFactory.newThread(this);
+			worker = connectionThreadFactory.newThread(this);
 			worker.start();
 		}
 
@@ -152,7 +152,7 @@ public final class Collector implements Runnable {
 				socket.setKeepAlive(true);
 				socket.setTrafficClass(0x04 | 0x10); // Reliability, low-delay
 				socket.setPerformancePreferences(0, 2, 1); // latency more important than bandwidth and connection time.
-				socket.connect(new InetSocketAddress("collector.instrumentalapp.com", 8000));
+				socket.connect(new InetSocketAddress("connection.instrumentalapp.com", 8000));
 				outputStream = socket.getOutputStream();
 
 				String hello = "hello version java/instrumental_agent/0.0.1 hostname " + getHostname() + " pid " + getProcessId("?") + " runtime " + getRuntimeInfo() + " platform " + getPlatformInfo();
@@ -248,7 +248,7 @@ public final class Collector implements Runnable {
 				try {
 					worker.join(10000);
 				} catch (InterruptedException ie) {
-					LOG.severe("Failed to cleanly shutdown the Collector");
+					LOG.severe("Failed to cleanly shutdown the Connection");
 				}
 			}
 			streamLock.lock();
@@ -266,7 +266,7 @@ public final class Collector implements Runnable {
 		// Since we've removed the message from the queue, don't discard it, and don't advance.
 		errors++;
 		long delay = (long) Math.min(maxReconnectDelay, Math.pow(errors++, reconnectBackoff));
-		LOG.severe("Failed to connect to collector.instrumentalapp.com:8000. Retry in " + delay + "ms");
+		LOG.severe("Failed to connect to connection.instrumentalapp.com:8000. Retry in " + delay + "ms");
 		Thread.sleep(delay);
 	}
 
@@ -307,13 +307,13 @@ public final class Collector implements Runnable {
 	/**
 	 * Internal class to create the background threads.
 	 */
-	private static class CollectorThreadFactory implements ThreadFactory {
+	private static class ConnectionThreadFactory implements ThreadFactory {
 		private static ThreadGroup agentThreads = new ThreadGroup("Instrumental-Agent");
 		private static final AtomicInteger threadCount = new AtomicInteger(0);
 
 		@Override
 		public Thread newThread(Runnable r) {
-			Thread t = new Thread(agentThreads, r, "collector-" + threadCount.getAndIncrement());
+			Thread t = new Thread(agentThreads, r, "connection-" + threadCount.getAndIncrement());
 			t.setDaemon(false);
 			t.setPriority(Thread.MIN_PRIORITY + 1);
 			return t;
