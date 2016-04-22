@@ -13,39 +13,55 @@ public class Agent {
 	private Connection connection;
 
 	public Agent(final AgentOptions agentOptions) {
-		connection = new Connection(agentOptions);
 		this.agentOptions = agentOptions;
+		initializeConnection();
 	}
+
 	public Agent(final String apiKey) {
 		this.agentOptions = new AgentOptions();
 		agentOptions.setApiKey(apiKey);
-		connection = new Connection(agentOptions);
+		initializeConnection();
+	}
 
+	private void initializeConnection() {
+		if (agentOptions.getEnabled()) {
+			connection = new Connection(agentOptions);
+		}
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
-		connection.setShutdown(true);
+		if (agentOptions.getEnabled()) {
+			connection.setShutdown(true);
+		}
 	}
 
 	public boolean isRunning() {
-		return connection.isRunning();
+		return agentOptions.getEnabled() && connection.isRunning();
 	}
 
 	public boolean getShutdown() {
-		return connection.isShutdown();
+		return !agentOptions.getEnabled() || connection.isShutdown();
 	}
 
 	public void setShutdown(boolean shutdown) {
-		connection.setShutdown(shutdown);
+		if (agentOptions.getEnabled()) {
+			connection.setShutdown(shutdown);
+		}
 	}
 
 	public int getPending() {
-		return connection.messages.size();
+		if (agentOptions.getEnabled()) {
+			return 0;
+		} else {
+			return connection.messages.size();
+		}
 	}
 
 	public void increment(final String metricName, final Number value, final long time, final long count) {
-		connection.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, count).toString(), agentOptions.getSynchronous());
+		if (agentOptions.getEnabled()) {
+			connection.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, count).toString(), agentOptions.getSynchronous());
+		}
 	}
 
 	public void increment(final String metricName, final Number value, final long time) {
@@ -61,7 +77,9 @@ public class Agent {
 	}
 
 	public void gauge(final String metricName, final Number value, final long time, final long count) {
-		connection.send(new Metric(Metric.Type.GAUGE, metricName, value, time, count).toString(), agentOptions.getSynchronous());
+		if (agentOptions.getEnabled()) {
+			connection.send(new Metric(Metric.Type.GAUGE, metricName, value, time, count).toString(), agentOptions.getSynchronous());
+		}
 	}
 
 	public void gauge(final String metricName, final Number value, final long time) {
@@ -146,7 +164,9 @@ public class Agent {
 	}
 
 	public void notice(final String message, final long time, final long duration) {
-		connection.send(new Notice(message, time, duration).toString(), agentOptions.getSynchronous());
+		if (agentOptions.getEnabled()) {
+			connection.send(new Notice(message, time, duration).toString(), agentOptions.getSynchronous());
+		}
 	}
 
 	public void notice(final String message, long time) {
