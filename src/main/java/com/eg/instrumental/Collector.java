@@ -14,9 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
-/**
- * Created by bvarner on 12/17/14.
- */
 public final class Collector implements Runnable {
 
 	private static final Charset ASCII = Charset.forName("ASCII");
