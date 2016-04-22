@@ -9,7 +9,7 @@ public class ConnectionTest {
 
 	@Test
 	public void connectionLazyStart() {
-		Connection c = new Connection("foobar");
+		Connection c = new Connection(new AgentOptions().setApiKey("foobar"));
 		c.outputStream = System.out;
 
 		Assert.assertFalse(c.isShutdown());
@@ -29,7 +29,7 @@ public class ConnectionTest {
 	@Test
 	public void connectionStreamTest() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Connection c = new Connection("foobar");
+		Connection c = new Connection(new AgentOptions().setApiKey("foobar"));
 		c.outputStream = baos;
 
 		Assert.assertEquals(0, baos.size());
@@ -47,7 +47,7 @@ public class ConnectionTest {
 	@Test
 	public void restartTest() {
 		// Initialize
-		Connection c = new Connection("foobar");
+		Connection c = new Connection(new AgentOptions().setApiKey("foobar"));
 		c.outputStream = System.out;
 
 		Assert.assertFalse(c.isShutdown());

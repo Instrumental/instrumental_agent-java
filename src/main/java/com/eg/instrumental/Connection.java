@@ -19,7 +19,7 @@ public final class Connection implements Runnable {
 	private static final Charset ASCII = Charset.forName("ASCII");
 	private static final ThreadFactory connectionThreadFactory = new ConnectionThreadFactory();
 
-	private String apiKey;
+	private AgentOptions agentOptions;
     public static final int MAX_QUEUE_SIZE = 5000;
 	LinkedBlockingDeque<String> messages = new LinkedBlockingDeque<String>(MAX_QUEUE_SIZE);
 	private Thread worker = null;
@@ -39,27 +39,12 @@ public final class Connection implements Runnable {
 
 	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
 
-	public Connection(final String apiKey) {
-		this.apiKey = apiKey;
+	public Connection(final AgentOptions agentOptions) {
+		this.agentOptions = agentOptions;
 	}
 
-
-
-	public void setApiKey(final String apiKey) {
-		streamLock.lock();
-		cleanupStream();
-		this.apiKey = apiKey;
-		try {
-			ensureStream();
-		} catch (IOException ioe) {
-			LOG.warning("Connection Error.");
-		} finally {
-			streamLock.unlock();
-		}
-	}
-
-	public String getApiKey() {
-		return apiKey;
+	public AgentOptions getAgentOptions() {
+		return agentOptions;
 	}
 
 	void send(String command, boolean synchronous) {
@@ -152,13 +137,13 @@ public final class Connection implements Runnable {
 				socket.setKeepAlive(true);
 				socket.setTrafficClass(0x04 | 0x10); // Reliability, low-delay
 				socket.setPerformancePreferences(0, 2, 1); // latency more important than bandwidth and connection time.
-				socket.connect(new InetSocketAddress("connection.instrumentalapp.com", 8000));
+				socket.connect(new InetSocketAddress(agentOptions.getHost(), agentOptions.getPort()));
 				outputStream = socket.getOutputStream();
 
 				String hello = "hello version java/instrumental_agent/0.0.1 hostname " + getHostname() + " pid " + getProcessId("?") + " runtime " + getRuntimeInfo() + " platform " + getPlatformInfo();
 
 				write(hello, true);
-				write("authenticate " + apiKey, true);
+				write("authenticate " + agentOptions.getApiKey(), true);
 
 				errors = 0;
 			}

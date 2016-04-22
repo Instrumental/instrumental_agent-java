@@ -9,26 +9,23 @@ import java.util.concurrent.Future;
  * // TODO: Add JMX Exporting...
  */
 public class Agent {
-
-	private boolean synchronous = false;
-
+	private AgentOptions agentOptions;
 	private Connection connection;
 
+	public Agent(final AgentOptions agentOptions) {
+		connection = new Connection(agentOptions);
+		this.agentOptions = agentOptions;
+	}
 	public Agent(final String apiKey) {
-		connection = new Connection(apiKey);
+		this.agentOptions = new AgentOptions();
+		agentOptions.setApiKey(apiKey);
+		connection = new Connection(agentOptions);
+
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
 		connection.setShutdown(true);
-	}
-
-	public String getApiKey() {
-		return connection.getApiKey();
-	}
-
-	public void setApiKey(final String apiKey) {
-		connection.setApiKey(apiKey);
 	}
 
 	public boolean isRunning() {
@@ -43,21 +40,12 @@ public class Agent {
 		connection.setShutdown(shutdown);
 	}
 
-	public boolean getSynchronous() {
-		return synchronous;
-	}
-
 	public int getPending() {
 		return connection.messages.size();
 	}
 
-	public void setSynchronous(boolean synchronous) {
-		this.synchronous = synchronous;
-	}
-
-
 	public void increment(final String metricName, final Number value, final long time, final long count) {
-		connection.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, count).toString(), synchronous);
+		connection.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, count).toString(), agentOptions.getSynchronous());
 	}
 
 	public void increment(final String metricName, final Number value, final long time) {
@@ -73,7 +61,7 @@ public class Agent {
 	}
 
 	public void gauge(final String metricName, final Number value, final long time, final long count) {
-		connection.send(new Metric(Metric.Type.GAUGE, metricName, value, time, count).toString(), synchronous);
+		connection.send(new Metric(Metric.Type.GAUGE, metricName, value, time, count).toString(), agentOptions.getSynchronous());
 	}
 
 	public void gauge(final String metricName, final Number value, final long time) {
@@ -158,7 +146,7 @@ public class Agent {
 	}
 
 	public void notice(final String message, final long time, final long duration) {
-		connection.send(new Notice(message, time, duration).toString(), synchronous);
+		connection.send(new Notice(message, time, duration).toString(), agentOptions.getSynchronous());
 	}
 
 	public void notice(final String message, long time) {
