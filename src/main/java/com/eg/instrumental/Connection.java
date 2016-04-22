@@ -255,10 +255,6 @@ public final class Connection implements Runnable {
 		Thread.sleep(delay);
 	}
 
-	private void write(Metric metric, boolean forceFlush) throws IOException, IllegalArgumentException {
-		write(metric.toString(), forceFlush);
-	}
-
 	private void write(String message, boolean forceFlush) throws IOException {
 		// If we 'shutdown', don't do anything
 		if (!shutdown) {
