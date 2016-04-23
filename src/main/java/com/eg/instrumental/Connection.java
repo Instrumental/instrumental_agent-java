@@ -1,6 +1,7 @@
 package com.eg.instrumental;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
@@ -24,6 +25,7 @@ public final class Connection implements Runnable {
 	LinkedBlockingQueue<String> messages = new LinkedBlockingQueue<String>(MAX_QUEUE_SIZE);
 	private Thread worker = null;
 	private Socket socket = null;
+	InputStream inputStream = null;
 	OutputStream outputStream = null;
 
 	private final ReentrantLock streamLock = new ReentrantLock();
@@ -133,14 +135,30 @@ public final class Connection implements Runnable {
 				socket.setTrafficClass(0x04 | 0x10); // Reliability, low-delay
 				socket.setPerformancePreferences(0, 2, 1); // latency more important than bandwidth and connection time.
 				socket.connect(new InetSocketAddress(agentOptions.getHost(), agentOptions.getPort()));
+				inputStream = socket.getInputStream();
 				outputStream = socket.getOutputStream();
 
 				String hello = "hello version java/instrumental_agent/0.0.1 hostname " + getHostname() + " pid " + getProcessId("?") + " runtime " + getRuntimeInfo() + " platform " + getPlatformInfo();
 
 				write(hello, true);
 				write("authenticate " + agentOptions.getApiKey(), true);
-
-				errors = 0;
+				byte[] inputData = new byte[1024];
+				int readCount = readInputStreamWithTimeout(System.in, inputData, 6000);
+				if (readCount == -1) {
+					try {
+						backoffReconnect();
+					} catch (InterruptedException ie) {
+					}
+				} else {
+					if (new String(inputData, Charset.forName("US-ASCII")) == "ok\nok\n") {
+						errors = 0;
+					} else {
+						try {
+							backoffReconnect();
+						} catch (InterruptedException ie) {
+						}
+					}
+				}
 			}
 		} finally {
 			streamLock.unlock();
@@ -248,6 +266,19 @@ public final class Connection implements Runnable {
 		long delay = (long) Math.min(maxReconnectDelay, Math.pow(errors++, reconnectBackoff));
 		LOG.severe("Failed to connect to " + agentOptions.getHost() + ":" + agentOptions.getPort() + ". Retry in " + delay + "ms");
 		Thread.sleep(delay);
+	}
+
+	public static int readInputStreamWithTimeout(InputStream is, byte[] b, int timeoutMillis) throws IOException  {
+		int bufferOffset = 0;
+		long maxTimeMillis = System.currentTimeMillis() + timeoutMillis;
+		while (System.currentTimeMillis() < maxTimeMillis && bufferOffset < b.length) {
+			int readLength = java.lang.Math.min(is.available(),b.length-bufferOffset);
+			// can alternatively use bufferedReader, guarded by isReady():
+			int readResult = is.read(b, bufferOffset, readLength);
+			if (readResult == -1) break;
+			bufferOffset += readResult;
+		}
+		return bufferOffset;
 	}
 
 	private void write(String message, boolean forceFlush) throws IOException {
