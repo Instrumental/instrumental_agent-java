@@ -1,32 +1,19 @@
-instrumental-agent-java
-=======================
+# Instrumental Java Agent
 
-A minimal java agent library for the [Instrumental] logging service without using Statsd.
-This is more or less a direct port of the [Instrumental.net](https://github.com/ralphrodkey/Instrumental.NET) library.
+A minimal native Java agent for the [Instrumental](https://instrumentalapp.com/) service.
 
-For a more full-featured solution, take a look at using [Dropwizard Metrics](http://dropwizard.io/metrics/) with the [metrics-instrumental](http://www.github.com/egineering-llc/metrics-instrumental) reporter.
+## Usage
 
+```Java
+import com.eg.instrumental.*;
 
+Agent agent = new Agent(new AgentOptions().setApiKey("YOUR_API_KEY"));
 
-Features
-========
- - Doesn't require Statsd
- - Works well with Java. :^)
-
-Example
-=======
- ```Java
- import com.eg.instrumental.*;
-
- Agent agent = new Agent("your api key");
-
- agent.increment("myapp.login");
- agent.gauge("heap_free", 8675309);
- agent.time("some.longProcess", new Runnable() {
-    public void run() {
-        // Do something....
-    });
- agent.notice("Maintenance Now.");
+agent.increment("myapp.login");
+agent.gauge("heap_free", 8675309);
+agent.time("some.longProcess", new Runnable() {
+  public void run() {
+    // Do something....
+  });
+agent.notice("Maintenance Now.");
 ```
-
- [Instrumental]:http://instrumentalapp.com
