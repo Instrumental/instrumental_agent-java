@@ -21,7 +21,7 @@ public final class Connection implements Runnable {
 	private static final ThreadFactory connectionThreadFactory = new ConnectionThreadFactory();
 
 	private AgentOptions agentOptions;
-  public static final int MAX_QUEUE_SIZE = 5000;
+	public static final int MAX_QUEUE_SIZE = 5000;
 	LinkedBlockingQueue<String> messages = new LinkedBlockingQueue<String>(MAX_QUEUE_SIZE);
 	private Thread worker = null;
 	private Socket socket = null;
@@ -233,9 +233,9 @@ public final class Connection implements Runnable {
 		return worker != null && worker.isAlive();
 	}
 
-    public boolean isQueueOverflowing() {
-        return queueFullWarned;
-    }
+		public boolean isQueueOverflowing() {
+				return queueFullWarned;
+		}
 
 	public void setShutdown(boolean shutdown) {
 		this.shutdown = shutdown;
