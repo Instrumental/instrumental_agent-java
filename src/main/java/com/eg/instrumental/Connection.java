@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,8 +20,8 @@ public final class Connection implements Runnable {
 	private static final ThreadFactory connectionThreadFactory = new ConnectionThreadFactory();
 
 	private AgentOptions agentOptions;
-    public static final int MAX_QUEUE_SIZE = 5000;
-	LinkedBlockingDeque<String> messages = new LinkedBlockingDeque<String>(MAX_QUEUE_SIZE);
+  public static final int MAX_QUEUE_SIZE = 5000;
+	LinkedBlockingQueue<String> messages = new LinkedBlockingQueue<String>(MAX_QUEUE_SIZE);
 	private Thread worker = null;
 	private Socket socket = null;
 	OutputStream outputStream = null;
@@ -92,7 +92,6 @@ public final class Connection implements Runnable {
 
 	@Override
 	public void run() {
-		String command = null;
 		while (!shutdown || !messages.isEmpty()) {
 			// Make sure the socket state is kosher.
 			try {
@@ -103,13 +102,10 @@ public final class Connection implements Runnable {
 
 			// Get the next message off the queue.
 			try {
-				if (command == null) {
-					command = messages.poll(5, TimeUnit.SECONDS);
-				}
+				String command = messages.take();
 
 				// Try to write the message
 				write(command, false);
-				command = null;
 			} catch (InterruptedException ie) {
 				break;
 			} catch (IOException ioe) {
@@ -122,7 +118,6 @@ public final class Connection implements Runnable {
 			} catch (IllegalArgumentException iae) {
 				// Illegally formatted command.
 				LOG.severe(iae.toString());
-				command = null;
 				send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis(), 1).toString(), false);
 			}
 		}
