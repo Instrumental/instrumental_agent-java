@@ -295,7 +295,7 @@ public final class Connection implements Runnable {
 		@Override
 		public Thread newThread(Runnable r) {
 			Thread t = new Thread(agentThreads, r, "connection-" + threadCount.getAndIncrement());
-			t.setDaemon(false);
+			t.setDaemon(true);
 			t.setPriority(Thread.MIN_PRIORITY + 1);
 			return t;
 		}
