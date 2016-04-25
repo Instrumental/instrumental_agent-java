@@ -18,7 +18,7 @@ public class AgentTest {
             Scanner scanner = new Scanner( new File("test_key") );
             apiKey = scanner.useDelimiter("\\A").next();
         } catch(FileNotFoundException e) {
-            System.out.println("Please put the test project key into file 'test_key' in the project root");
+            Assert.assertTrue("Please put the test project key into file 'test_key' in the project root", false);
         }
     }
 
