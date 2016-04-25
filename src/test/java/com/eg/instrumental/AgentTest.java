@@ -1,8 +1,8 @@
 package com.eg.instrumental;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.*;
+import java.io.*;
+import java.util.Scanner;
 import java.util.Random;
 
 public class AgentTest {
@@ -10,11 +10,20 @@ public class AgentTest {
 	private static long start = System.currentTimeMillis();
 
 	private static Random r = new Random();
+    private static String apiKey;
+
+    @Before
+    public void setUp() throws Exception {
+        try {
+            Scanner scanner = new Scanner( new File("test_key") );
+            apiKey = scanner.useDelimiter("\\A").next();
+        } catch(FileNotFoundException e) {
+            System.out.println("Please put the test project key into file 'test_key' in the project root");
+        }
+    }
 
 	@Test
 	public void gaugeTest() {
-		String apiKey = System.getProperty("instrumentalapp.apikey", "");
-
 		if (!apiKey.equals("")) {
 			Agent agent = new Agent(apiKey);
 
@@ -35,8 +44,6 @@ public class AgentTest {
 
 	@Test
 	public void incrementTest() {
-		String apiKey = System.getProperty("instrumentalapp.apikey", "");
-
 		if (!apiKey.equals("")) {
 			Agent agent = new Agent(apiKey);
 
@@ -56,8 +63,6 @@ public class AgentTest {
 
 	@Test
 	public void noticeTest() {
-		String apiKey = System.getProperty("instrumentalapp.apikey", "");
-
 		if (!apiKey.equals("")) {
 			Agent agent = new Agent(apiKey);
 
@@ -73,7 +78,6 @@ public class AgentTest {
 
     @Test
     public void nonblockingTest() {
-        String apiKey = System.getProperty("instrumentalapp.apikey", "");
         Agent agent = new Agent(apiKey);
 
         for (int i = 1; i < (Connection.MAX_QUEUE_SIZE + 1); i++) {
