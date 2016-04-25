@@ -1,13 +1,14 @@
 package com.eg.instrumental;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,10 +21,11 @@ public final class Connection implements Runnable {
 	private static final ThreadFactory connectionThreadFactory = new ConnectionThreadFactory();
 
 	private AgentOptions agentOptions;
-    public static final int MAX_QUEUE_SIZE = 5000;
-	LinkedBlockingDeque<String> messages = new LinkedBlockingDeque<String>(MAX_QUEUE_SIZE);
+	public static final int MAX_QUEUE_SIZE = 5000;
+	LinkedBlockingQueue<String> messages = new LinkedBlockingQueue<String>(MAX_QUEUE_SIZE);
 	private Thread worker = null;
 	private Socket socket = null;
+	InputStream inputStream = null;
 	OutputStream outputStream = null;
 
 	private final ReentrantLock streamLock = new ReentrantLock();
@@ -92,7 +94,6 @@ public final class Connection implements Runnable {
 
 	@Override
 	public void run() {
-		String command = null;
 		while (!shutdown || !messages.isEmpty()) {
 			// Make sure the socket state is kosher.
 			try {
@@ -103,13 +104,10 @@ public final class Connection implements Runnable {
 
 			// Get the next message off the queue.
 			try {
-				if (command == null) {
-					command = messages.poll(5, TimeUnit.SECONDS);
-				}
+				String command = messages.take();
 
 				// Try to write the message
 				write(command, false);
-				command = null;
 			} catch (InterruptedException ie) {
 				break;
 			} catch (IOException ioe) {
@@ -122,7 +120,6 @@ public final class Connection implements Runnable {
 			} catch (IllegalArgumentException iae) {
 				// Illegally formatted command.
 				LOG.severe(iae.toString());
-				command = null;
 				send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis(), 1).toString(), false);
 			}
 		}
@@ -138,14 +135,30 @@ public final class Connection implements Runnable {
 				socket.setTrafficClass(0x04 | 0x10); // Reliability, low-delay
 				socket.setPerformancePreferences(0, 2, 1); // latency more important than bandwidth and connection time.
 				socket.connect(new InetSocketAddress(agentOptions.getHost(), agentOptions.getPort()));
+				inputStream = socket.getInputStream();
 				outputStream = socket.getOutputStream();
 
 				String hello = "hello version java/instrumental_agent/0.0.1 hostname " + getHostname() + " pid " + getProcessId("?") + " runtime " + getRuntimeInfo() + " platform " + getPlatformInfo();
 
 				write(hello, true);
 				write("authenticate " + agentOptions.getApiKey(), true);
-
-				errors = 0;
+				byte[] inputData = new byte[1024];
+				int readCount = readInputStreamWithTimeout(System.in, inputData, 6000);
+				if (readCount == -1) {
+					try {
+						backoffReconnect();
+					} catch (InterruptedException ie) {
+					}
+				} else {
+					if (new String(inputData, Charset.forName("US-ASCII")) == "ok\nok\n") {
+						errors = 0;
+					} else {
+						try {
+							backoffReconnect();
+						} catch (InterruptedException ie) {
+						}
+					}
+				}
 			}
 		} finally {
 			streamLock.unlock();
@@ -220,9 +233,9 @@ public final class Connection implements Runnable {
 		return worker != null && worker.isAlive();
 	}
 
-    public boolean isQueueOverflowing() {
-        return queueFullWarned;
-    }
+		public boolean isQueueOverflowing() {
+				return queueFullWarned;
+		}
 
 	public void setShutdown(boolean shutdown) {
 		this.shutdown = shutdown;
@@ -253,6 +266,19 @@ public final class Connection implements Runnable {
 		long delay = (long) Math.min(maxReconnectDelay, Math.pow(errors++, reconnectBackoff));
 		LOG.severe("Failed to connect to " + agentOptions.getHost() + ":" + agentOptions.getPort() + ". Retry in " + delay + "ms");
 		Thread.sleep(delay);
+	}
+
+	public static int readInputStreamWithTimeout(InputStream is, byte[] b, int timeoutMillis) throws IOException  {
+		int bufferOffset = 0;
+		long maxTimeMillis = System.currentTimeMillis() + timeoutMillis;
+		while (System.currentTimeMillis() < maxTimeMillis && bufferOffset < b.length) {
+			int readLength = java.lang.Math.min(is.available(),b.length-bufferOffset);
+			// can alternatively use bufferedReader, guarded by isReady():
+			int readResult = is.read(b, bufferOffset, readLength);
+			if (readResult == -1) break;
+			bufferOffset += readResult;
+		}
+		return bufferOffset;
 	}
 
 	private void write(String message, boolean forceFlush) throws IOException {
