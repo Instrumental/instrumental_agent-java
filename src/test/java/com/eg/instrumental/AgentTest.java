@@ -24,19 +24,17 @@ public class AgentTest {
 
     @Test
     public void gaugeTest() {
-        if (!apiKey.equals("")) {
-            Agent agent = new Agent(apiKey);
+        Agent agent = new Agent(apiKey);
 
-            for (int i = 1; i < 20; i++) {
-                float val = r.nextFloat() * 100;
-                agent.gauge("test.gauge", val);
-            }
+        for (int i = 1; i < 20; i++) {
+            float val = r.nextFloat() * 100;
+            agent.gauge("test.gauge", val);
+        }
 
-            while (agent.getPending() > 0) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ie) {}
-            }
+        while (agent.getPending() > 0) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {}
         }
 
         // TODO: Assert the number of metrics sent.
@@ -44,18 +42,16 @@ public class AgentTest {
 
     @Test
     public void incrementTest() {
-        if (!apiKey.equals("")) {
-            Agent agent = new Agent(apiKey);
+        Agent agent = new Agent(apiKey);
 
-            for (int i = 1; i < 20; i++) {
-                agent.increment("test.increment");
-            }
+        for (int i = 1; i < 20; i++) {
+            agent.increment("test.increment");
+        }
 
-            while (agent.getPending() > 0) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ie) {}
-            }
+        while (agent.getPending() > 0) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {}
         }
 
         // TODO: Assert the number of metrics sent.
@@ -63,16 +59,14 @@ public class AgentTest {
 
     @Test
     public void noticeTest() {
-        if (!apiKey.equals("")) {
-            Agent agent = new Agent(apiKey);
+        Agent agent = new Agent(apiKey);
 
-            agent.notice("test.execution", (System.currentTimeMillis() - start) / 1000, start);
+        agent.notice("test.execution", (System.currentTimeMillis() - start) / 1000, start);
 
-            while (agent.getPending() > 0) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ie) {}
-            }
+        while (agent.getPending() > 0) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {}
         }
     }
 
