@@ -2,3 +2,4 @@ target/*
 .idea/*
 *.iml
 hs_err_*.log
+test_key
