@@ -1,5 +1,6 @@
 package com.instrumentalapp;
 
+import java.lang.RuntimeException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -62,7 +63,9 @@ public class Agent {
 
 	public void increment(final String metricName, final Number value, final long time, final long count) {
 		if (agentOptions.getEnabled()) {
-			connection.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, count).toString(), agentOptions.getSynchronous());
+			try {
+				connection.send(new Metric(Metric.Type.INCREMENT, metricName, value, time, count).toString(), agentOptions.getSynchronous());
+			} catch (RuntimeException e) {}
 		}
 	}
 
@@ -80,7 +83,9 @@ public class Agent {
 
 	public void gauge(final String metricName, final Number value, final long time, final long count) {
 		if (agentOptions.getEnabled()) {
-			connection.send(new Metric(Metric.Type.GAUGE, metricName, value, time, count).toString(), agentOptions.getSynchronous());
+			try {
+				connection.send(new Metric(Metric.Type.GAUGE, metricName, value, time, count).toString(), agentOptions.getSynchronous());
+			} catch (RuntimeException e) {}
 		}
 	}
 
@@ -167,7 +172,9 @@ public class Agent {
 
 	public void notice(final String message, final long time, final long duration) {
 		if (agentOptions.getEnabled()) {
-			connection.send(new Notice(message, time, duration).toString(), agentOptions.getSynchronous());
+			try {
+				connection.send(new Notice(message, time, duration).toString(), agentOptions.getSynchronous());
+			} catch (RuntimeException e) {}
 		}
 	}
 
