@@ -148,6 +148,7 @@ public final class Connection implements Runnable {
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					if (reader.readLine().equals("ok")) {
 						if (reader.readLine().equals("ok")) {
+							errors = 0;
 							break;
 						} else {
 							LOG.severe("authentication failed");
@@ -291,8 +292,6 @@ public final class Connection implements Runnable {
 						outputStream.flush();
 						bytesWritten = 0;
 					}
-
-					errors = 0;
 				} finally {
 					streamLock.unlock();
 				}
