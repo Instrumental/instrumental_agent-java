@@ -138,7 +138,7 @@ public final class Connection implements Runnable {
 				socket.connect(new InetSocketAddress(agentOptions.getHost(), agentOptions.getPort()));
 				outputStream = socket.getOutputStream();
 
-				String hello = "hello version java/instrumental_agent/0.0.1 hostname " + getHostname() + " pid " + getProcessId("?") + " runtime " + getRuntimeInfo() + " platform " + getPlatformInfo();
+				String hello = "hello version java/instrumental_agent/" + Agent.VERSION + " hostname " + getHostname() + " pid " + getProcessId("?") + " runtime " + getRuntimeInfo() + " platform " + getPlatformInfo();
 
 				write(hello, true);
 				write("authenticate " + agentOptions.getApiKey(), true);

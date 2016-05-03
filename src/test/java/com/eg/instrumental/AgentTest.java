@@ -24,7 +24,7 @@ public class AgentTest {
 
     @Test
     public void gaugeTest() {
-        Agent agent = new Agent(apiKey);
+        Agent agent = new Agent(new AgentOptions().setApiKey("a").setHost("localhost"));
 
         for (int i = 1; i < 20; i++) {
             float val = r.nextFloat() * 100;
