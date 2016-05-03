@@ -10,6 +10,24 @@
 	<url>https://github.com/instrumental/instrumental_agent-java</url>
 	<description>This agent supports Instrumental custom metric monitoring for Ruby applications. It provides high-data reliability at high scale, without ever blocking your process or causing an exception.</description>
 
+	<scm>
+		<url>https://github.com/instrumental/instrumental_agent-java</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Bryan Varner</name>
+			<organization>E-gineering, LLC</organization>
+			<organizationUrl>http://www.e-gineering.com</organizationUrl>
+		</developer>
+		<developer>
+			<name>Elijah Miller</name>
+			<email>elijah.miller@gmail.com</email>
+			<organization>Instrumental</organization>
+			<organizationUrl>https://instrumentalapp.com</organizationUrl>
+		</developer>
+	</developers>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
