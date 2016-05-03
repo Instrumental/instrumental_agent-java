@@ -24,7 +24,7 @@ public class AgentTest {
 
     @Test
     public void gaugeTest() {
-        Agent agent = new Agent(new AgentOptions().setApiKey("a").setHost("localhost"));
+        Agent agent = new Agent(new AgentOptions().setApiKey(apiKey));
 
         for (int i = 1; i < 20; i++) {
             float val = r.nextFloat() * 100;
@@ -42,7 +42,7 @@ public class AgentTest {
 
     @Test
     public void incrementTest() {
-        Agent agent = new Agent(apiKey);
+        Agent agent = new Agent(new AgentOptions().setApiKey(apiKey));
 
         for (int i = 1; i < 20; i++) {
             agent.increment("test.increment");
@@ -59,7 +59,7 @@ public class AgentTest {
 
     @Test
     public void noticeTest() {
-        Agent agent = new Agent(apiKey);
+        Agent agent = new Agent(new AgentOptions().setApiKey(apiKey));
 
         agent.notice("test.execution", (System.currentTimeMillis() - start) / 1000, start);
 
@@ -72,7 +72,7 @@ public class AgentTest {
 
     @Test
     public void nonblockingTest() {
-        Agent agent = new Agent(apiKey);
+        Agent agent = new Agent(new AgentOptions().setApiKey(apiKey));
 
         for (int i = 1; i < (Connection.MAX_QUEUE_SIZE + 1); i++) {
             agent.increment("test.increment");
