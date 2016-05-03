@@ -267,8 +267,7 @@ public final class Connection implements Runnable {
 		// An error occurred trying to send the current message.
 		// Do a reconnect, then try to send the message again.
 		// Since we've removed the message from the queue, don't discard it, and don't advance.
-		errors++;
-		long delay = (long) Math.min(maxReconnectDelay, Math.pow(errors++, reconnectBackoff));
+		long delay = (long) Math.min(maxReconnectDelay, Math.pow(errors++, reconnectBackoff) * 1000);
 		LOG.severe("Failed to connect to " + agentOptions.getHost() + ":" + agentOptions.getPort() + ". Retry in " + delay + "ms");
 		Thread.sleep(delay);
 	}
