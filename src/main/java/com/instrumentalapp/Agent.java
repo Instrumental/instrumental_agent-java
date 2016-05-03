@@ -93,19 +93,27 @@ public class Agent {
 	}
 
 
-	public void time(final String metricName, Runnable runnable) {
+	public void time(final String metricName, Runnable runnable, final Number multiplier) {
 		// Synchronous in current thread.
 		long start = System.currentTimeMillis();
 
 		try {
 			runnable.run();
 		} finally {
-			gauge(metricName, System.currentTimeMillis() - start);
+			gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
 		}
 	}
 
+	public void time(final String metricName, Runnable runnable) {
+		time(metricName, runnable, 1);
+	}
 
-	public <V> V time(final String metricName, Callable<V> callable) throws Exception {
+	public void timeMs(final String metricName, Runnable runnable) {
+		time(metricName, runnable, 1000);
+	}
+
+
+	public <V> V time(final String metricName, Callable<V> callable, final Number multiplier) throws Exception {
 		// Synchronous in current thread.
 		long start = System.currentTimeMillis();
 
@@ -114,7 +122,7 @@ public class Agent {
 		try {
 			val = callable.call();
 		} finally {
-			gauge(metricName, System.currentTimeMillis() - start);
+			gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
 		}
 
 		if (thrown != null) {
@@ -124,9 +132,17 @@ public class Agent {
 		return val;
 	}
 
+	public <V> V time(final String metricName, Callable<V> callable) throws Exception {
+		return time(metricName, callable, 1);
+	}
+
+	public <V> V timeMs(final String metricName, Callable<V> callable) throws Exception {
+		return time(metricName, callable, 1000);
+	}
+
 
 	// Wrap and submit to ExecutorService.
-	public <V> Future<V> time(final String metricName, final ExecutorService executor, final Callable<V> callable) {
+	public <V> Future<V> time(final String metricName, final ExecutorService executor, final Callable<V> callable, final Number multiplier) {
 		return executor.submit(new Callable<V>() {
 			@Override
 			public V call() throws Exception {
@@ -138,7 +154,7 @@ public class Agent {
 				} catch (Exception ex) {
 					thrown = ex;
 				} finally {
-					gauge(metricName, System.currentTimeMillis() - start);
+					gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
 				}
 
 				if (thrown != null) {
@@ -150,8 +166,17 @@ public class Agent {
 		});
 	}
 
+	public <V> Future<V> time(final String metricName, final ExecutorService executor, final Callable<V> callable) {
+		return time(metricName, executor, callable, 1);
+	}
+
+	public <V> Future<V> timeMs(final String metricName, final ExecutorService executor, final Callable<V> callable) {
+		return time(metricName, executor, callable, 1000);
+	}
+
+
 	// Wrap and submit to ExecutorService.
-	public <T> Future<T> time(final String metricName, final ExecutorService executor, final Runnable r, final T result) {
+	public <T> Future<T> time(final String metricName, final ExecutorService executor, final Runnable r, final T result, final Number multiplier) {
 		return executor.submit(new Runnable() {
 			@Override
 			public void run() {
@@ -159,10 +184,18 @@ public class Agent {
 				try {
 					r.run();
 				} finally {
-					gauge(metricName, System.currentTimeMillis() - start);
+					gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
 				}
 			}
 		}, result);
+	}
+
+	public <T> Future<T> time(final String metricName, final ExecutorService executor, final Runnable runnable, final T result) {
+		return time(metricName, executor, runnable, result, 1);
+	}
+
+	public <T> Future<T> timeMs(final String metricName, final ExecutorService executor, final Runnable runnable, final T result) {
+		return time(metricName, executor, runnable, result, 1000);
 	}
 
 	public void notice(final String message, final long time, final long duration) {
