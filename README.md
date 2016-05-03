@@ -80,7 +80,7 @@ We are here to help. Email us at [support@instrumentalapp.com](mailto:support@in
 7. Push to GitHub
 8. Tag version: `git tag 'vX.Y.Z' && git push --tags`
 9. `eval $(gpg-agent --daemon)`
-10. `echo | gpg --use-agent --armor --detach-sign`
+10. `gpg --use-agent --armor --detach-sign` and press ^C after authenticating
 11. `mvn clean deploy`
 12. Use the git tag and make a new release with `target/instrumental_agent-*` attached, https://github.com/instrumental/instrumental_agent-java/tags
 13. Refresh documentation on instrumentalapp.com
