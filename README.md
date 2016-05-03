@@ -5,7 +5,7 @@ A minimal native Java agent for the [Instrumental](https://instrumentalapp.com/)
 ## Usage
 
 ```Java
-import com.eg.instrumental.*;
+import com.instrumentalapp.*;
 
 Agent agent = new Agent(new AgentOptions().setApiKey("YOUR_API_KEY"));
 

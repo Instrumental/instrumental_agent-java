@@ -1,4 +1,4 @@
-package com.eg.instrumental;
+package com.instrumentalapp;
 
 import org.junit.Assert;
 import org.junit.Test;

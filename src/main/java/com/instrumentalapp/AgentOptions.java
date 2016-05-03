@@ -1,4 +1,4 @@
-package com.eg.instrumental;
+package com.instrumentalapp;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;

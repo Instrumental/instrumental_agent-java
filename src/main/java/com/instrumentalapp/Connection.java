@@ -1,4 +1,4 @@
-package com.eg.instrumental;
+package com.instrumentalapp;
 
 import java.io.IOException;
 import java.io.OutputStream;

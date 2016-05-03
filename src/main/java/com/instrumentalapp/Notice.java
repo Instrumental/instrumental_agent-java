@@ -1,4 +1,4 @@
-package com.eg.instrumental;
+package com.instrumentalapp;
 
 import java.util.regex.Pattern;
 
