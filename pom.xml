@@ -4,9 +4,11 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.eg</groupId>
-	<artifactId>instrumental-agent</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<groupId>com.instrumentalapp</groupId>
+	<artifactId>instrumental_agent</artifactId>
+	<version>0.0.1</version>
+	<url>https://github.com/instrumental/instrumental_agent-java</url>
+	<description>This agent supports Instrumental custom metric monitoring for Ruby applications. It provides high-data reliability at high scale, without ever blocking your process or causing an exception.</description>
 
 	<dependencies>
 		<dependency>
