@@ -4,10 +4,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-/**
- * An Instrumental Agent connects to the Instrumental backend and is used as the control point for sending metrics.
- * // TODO: Add JMX Exporting...
- */
 public class AgentOptions {
 	private String apiKey;
 	private boolean enabled = true;
@@ -63,6 +59,5 @@ public class AgentOptions {
 		this.port = port;
 		return this;
 	}
-
 
 }

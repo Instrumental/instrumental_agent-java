@@ -7,7 +7,6 @@ import java.util.concurrent.Future;
 
 /**
  * An Instrumental Agent connects to the Instrumental backend and is used as the control point for sending metrics.
- * // TODO: Add JMX Exporting...
  */
 public class Agent {
 	private AgentOptions agentOptions;
@@ -97,7 +96,6 @@ public class Agent {
 		gauge(metricName, value, System.currentTimeMillis());
 	}
 
-
 	public void time(final String metricName, Runnable runnable) {
 		// Synchronous in current thread.
 		long start = System.currentTimeMillis();
@@ -108,7 +106,6 @@ public class Agent {
 			gauge(metricName, System.currentTimeMillis() - start);
 		}
 	}
-
 
 	public <V> V time(final String metricName, Callable<V> callable) throws Exception {
 		// Synchronous in current thread.
@@ -128,7 +125,6 @@ public class Agent {
 
 		return val;
 	}
-
 
 	// Wrap and submit to ExecutorService.
 	public <V> Future<V> time(final String metricName, final ExecutorService executor, final Callable<V> callable) {
