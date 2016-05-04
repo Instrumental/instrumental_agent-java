@@ -10,7 +10,7 @@ Add the following to your `pom.xml`:
 <dependency>
   <groupId>com.instrumentalapp</groupId>
   <artifactId>instrumental_agent</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
 </dependency>
 ```
 
@@ -76,7 +76,7 @@ We are here to help. Email us at [support@instrumentalapp.com](mailto:support@in
   - `pom.xml`
   - `README.md`
 5. Update [CHANGELOG.md](CHANGELOG.md)
-6. Commit "Release version vX.Y.Z"
+6. Commit "Release vX.Y.Z"
 7. Push to GitHub
 8. Tag version: `git tag 'vX.Y.Z' && git push --tags`
 9. `eval $(gpg-agent --daemon)`
