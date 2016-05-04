@@ -75,7 +75,7 @@ public class Metric {
 		GAUGE("gauge"),
 		INCREMENT("increment");
 
-		private static final Pattern NAME_PATTERN = Pattern.compile("^([\\d\\w\\-_])+\\.*[\\d\\w\\-_]+$");
+		private static final Pattern NAME_PATTERN = Pattern.compile("^([\\d\\w\\-_]+\\.)*[\\d\\w\\-_]+$");
 
 		private String type;
 
