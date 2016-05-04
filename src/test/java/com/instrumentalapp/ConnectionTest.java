@@ -1,15 +1,26 @@
 package com.instrumentalapp;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.io.ByteArrayOutputStream;
+import org.junit.*;
+import java.io.*;
+import java.util.Scanner;
 
 public class ConnectionTest {
 
+	private static String apiKey;
+
+	@Before
+	public void setUp() throws Exception {
+	    try {
+	        Scanner scanner = new Scanner( new File("test_key") );
+	        apiKey = scanner.useDelimiter("\\A").next();
+	    } catch(FileNotFoundException e) {
+	        Assert.assertTrue("Please put the test project key into file 'test_key' in the project root", false);
+	    }
+	}
+
 	@Test
 	public void connectionLazyStart() {
-		Connection c = new Connection(new AgentOptions().setApiKey("foobar"));
+		Connection c = new Connection(new AgentOptions().setApiKey(apiKey));
 		c.outputStream = System.out;
 
 		Assert.assertFalse(c.isShutdown());
@@ -29,12 +40,19 @@ public class ConnectionTest {
 	@Test
 	public void connectionStreamTest() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Connection c = new Connection(new AgentOptions().setApiKey("foobar"));
+		Connection c = new Connection(new AgentOptions().setApiKey(apiKey));
 		c.outputStream = baos;
 
 		Assert.assertEquals(0, baos.size());
 
 		c.send(new Metric(Metric.Type.GAUGE, "connection.status", 1, 0, 1).toString(), true);
+		c.send(new Metric(Metric.Type.GAUGE, "connection.status", 1, 0, 1).toString(), true);
+
+		while (c.messages.size() > 0) {
+		    try {
+		        Thread.sleep(10);
+		    } catch (InterruptedException ie) {}
+		}
 
 		Assert.assertNotEquals(0, baos.size());
 
@@ -47,7 +65,7 @@ public class ConnectionTest {
 	@Test
 	public void restartTest() {
 		// Initialize
-		Connection c = new Connection(new AgentOptions().setApiKey("foobar"));
+		Connection c = new Connection(new AgentOptions().setApiKey(apiKey));
 		c.outputStream = System.out;
 
 		Assert.assertFalse(c.isShutdown());
