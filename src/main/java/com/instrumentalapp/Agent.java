@@ -103,7 +103,7 @@ public class Agent {
 		try {
 			runnable.run();
 		} finally {
-			gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
+			gauge(metricName, (System.currentTimeMillis() - start) / 1000f * multiplier.floatValue());
 		}
 	}
 
@@ -124,7 +124,7 @@ public class Agent {
 		try {
 			val = callable.call();
 		} finally {
-			gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
+			gauge(metricName, (System.currentTimeMillis() - start) / 1000f * multiplier.floatValue());
 		}
 
 		if (thrown != null) {
@@ -155,7 +155,7 @@ public class Agent {
 				} catch (Exception ex) {
 					thrown = ex;
 				} finally {
-					gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
+					gauge(metricName, (System.currentTimeMillis() - start) / 1000f * multiplier.floatValue());
 				}
 
 				if (thrown != null) {
@@ -185,7 +185,7 @@ public class Agent {
 				try {
 					r.run();
 				} finally {
-					gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
+					gauge(metricName, (System.currentTimeMillis() - start) / 1000f * multiplier.floatValue());
 				}
 			}
 		}, result);

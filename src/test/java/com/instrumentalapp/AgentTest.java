@@ -51,7 +51,19 @@ public class AgentTest {
     public void timeTest() throws Exception {
         Assert.assertEquals("test string", agent.time("test.time", new Callable() {
                     @Override
-                    public String call() {
+                    public String call() throws Exception{
+                        Thread.sleep(100);
+                        return "test string";
+                    }
+                }));
+    }
+
+    @Test
+    public void timeMsTest() throws Exception {
+        Assert.assertEquals("test string", agent.timeMs("test.timeMs", new Callable() {
+                    @Override
+                    public String call() throws Exception{
+                        Thread.sleep(100);
                         return "test string";
                     }
                 }));
