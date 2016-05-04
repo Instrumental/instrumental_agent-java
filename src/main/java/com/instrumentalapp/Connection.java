@@ -243,9 +243,9 @@ public final class Connection implements Runnable {
 		return worker != null && worker.isAlive();
 	}
 
-		public boolean isQueueOverflowing() {
-				return queueFullWarned;
-		}
+	public boolean isQueueOverflowing() {
+		return queueFullWarned;
+	}
 
 	public void setShutdown(boolean shutdown) {
 		this.shutdown = shutdown;
