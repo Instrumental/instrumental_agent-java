@@ -10,7 +10,7 @@ Add the following to your `pom.xml`:
 <dependency>
   <groupId>com.instrumentalapp</groupId>
   <artifactId>instrumental_agent</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 </dependency>
 ```
 
