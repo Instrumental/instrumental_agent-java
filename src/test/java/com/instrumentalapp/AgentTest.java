@@ -4,6 +4,7 @@ import org.junit.*;
 import java.io.*;
 import java.util.Scanner;
 import java.util.Random;
+import java.util.concurrent.Callable;
 
 public class AgentTest {
 
@@ -44,6 +45,16 @@ public class AgentTest {
             agent.gauge("test.gauge", val);
         }
         // TODO: Assert the number of metrics sent.
+    }
+
+    @Test
+    public void timeTest() throws Exception {
+        Assert.assertEquals("test string", agent.time("test.time", new Callable() {
+                    @Override
+                    public String call() {
+                        return "test string";
+                    }
+                }));
     }
 
     @Test
