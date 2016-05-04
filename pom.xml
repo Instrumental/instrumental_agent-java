@@ -6,6 +6,7 @@
 
 	<groupId>com.instrumentalapp</groupId>
 	<artifactId>instrumental_agent</artifactId>
+	<name>instrumental_agent</name>
 	<version>0.0.2</version>
 	<url>https://github.com/instrumental/instrumental_agent-java</url>
 	<description>This agent supports Instrumental custom metric monitoring for Java applications. It provides high-data reliability at high scale, without ever blocking your process or causing an exception.</description>
