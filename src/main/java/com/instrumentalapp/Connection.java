@@ -129,7 +129,9 @@ public final class Connection implements Runnable {
 	private void ensureStream() throws IOException {
 		streamLock.lock();
 		try {
-			while (!shutdown) {
+			// outputStream may be directly set during tests, so we use it as a
+			// first test for when we should really connect.
+			while ((outputStream == null) && !shutdown) {
 				socket = new Socket();
 				socket.setTcpNoDelay(true);
 				socket.setKeepAlive(true);
@@ -161,6 +163,7 @@ public final class Connection implements Runnable {
 				}
 
 				try {
+					outputStream = null;
 					backoffReconnect();
 				} catch (InterruptedException ie) {
 				}
