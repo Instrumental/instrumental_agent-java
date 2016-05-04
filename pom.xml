@@ -10,6 +10,14 @@
 	<url>https://github.com/instrumental/instrumental_agent-java</url>
 	<description>This agent supports Instrumental custom metric monitoring for Java applications. It provides high-data reliability at high scale, without ever blocking your process or causing an exception.</description>
 
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<scm>
 		<url>https://github.com/instrumental/instrumental_agent-java</url>
 	</scm>
