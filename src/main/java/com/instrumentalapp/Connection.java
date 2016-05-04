@@ -148,12 +148,14 @@ public final class Connection implements Runnable {
 				socket.setSoTimeout(6000);
 				try {
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-					if (reader.readLine().equals("ok")) {
-						if (reader.readLine().equals("ok")) {
+					String lastMessage;
+					if ((lastMessage = reader.readLine()).equals("ok")) {
+						if ((lastMessage = reader.readLine()).equals("ok")) {
+							LOG.info("authenticated.");
 							errors = 0;
 							break;
 						} else {
-							LOG.severe("authentication failed");
+							LOG.severe("authentication failed: " + lastMessage);
 						}
 					} else {
 						LOG.severe("hello failed");
