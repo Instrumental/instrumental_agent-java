@@ -2,7 +2,7 @@
 
 Instrumental is a [application monitoring platform](https://instrumentalapp.com) built for developers who want a better understanding of their production software. Powerful tools, like the [Instrumental Query Language](https://instrumentalapp.com/docs/query-language), combined with an exploration-focused interface allow you to get real answers to complex questions, in real-time.
 
-This agent supports custom metric monitoring for Java applications. It provides high-data reliability at high scale, without ever blocking your process or causing an exception. 
+This agent supports custom metric monitoring for Java applications. It provides high-data reliability at high scale, without ever blocking your process or causing an exception.
 
 ## Setup & Usage
 
@@ -12,7 +12,7 @@ Add the following to your `pom.xml`:
 <dependency>
   <groupId>com.instrumentalapp</groupId>
   <artifactId>instrumental_agent</artifactId>
-  <version>0.0.3</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
