@@ -6,17 +6,23 @@ import java.util.Scanner;
 
 public class ConnectionTest {
 
-	private static String apiKey;
+  private static String apiKey;
+  private Connection connection;
 
-	@Before
-	public void setUp() throws Exception {
-	    try {
-	        Scanner scanner = new Scanner( new File("test_key") );
-	        apiKey = scanner.useDelimiter("\\A").next();
-	    } catch(FileNotFoundException e) {
-	        Assert.assertTrue("Please put the test project key into file 'test_key' in the project root", false);
-	    }
-	}
+  @BeforeClass
+  public static void setUp() throws Exception {
+    try {
+        Scanner scanner = new Scanner( new File("test_key") );
+        apiKey = scanner.useDelimiter("\\A").next();
+    } catch(FileNotFoundException e) {
+        Assert.assertTrue("Please put the test project key into file 'test_key' in the project root", false);
+    }
+  }
+
+  @Before
+  public void initializeConnection() {
+      connection = new Connection(new AgentOptions().setApiKey(apiKey));
+  }
 
 	@Test
 	public void connectionLazyStart() {
