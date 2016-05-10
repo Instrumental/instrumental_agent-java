@@ -31,14 +31,15 @@ agent.gauge("load", 1.23);     // value at a point in time
 
 agent.increment("signups");    // increasing value, think "events"
 
-agent.time("query_time", new Runnable() {  // time execution
+agent.time("query_time", new Runnable() { // time execution
   public void run() {
-    // Do something....
-  });
-agent.timeMs("query_time", new Runnable() {  // prefer milliseconds?
+    // Do something
+  }});
+
+agent.time("query_time", new Runnable() { // prefer milliseconds?
   public void run() {
-    // Do something....
-  });
+    // Do something
+  }});
 ```
 
 **Note**: For your app's safety, the agent is meant to isolate your app from any problems our service might suffer. If it is unable to connect to the service, it will discard data after reaching a low memory threshold.
@@ -46,8 +47,8 @@ agent.timeMs("query_time", new Runnable() {  // prefer milliseconds?
 Want to track an event (like an application deploy, or downtime)? You can capture events that are instantaneous, or events that happen over a period of time.
 
 ```Java
-agent.notice('Jeffy deployed rev ef3d6a')  // instantaneous event
-agent.notice('Testing socket buffer increase', System.currentTimeMillis() / 1000 - 60 * 10, 60*10) // an event with a duration
+agent.notice('Jeffy deployed rev ef3d6a');  // instantaneous event
+agent.notice('Testing socket buffer increase', System.currentTimeMillis() / 1000 - 60 * 10, 60*10); // an event with a duration
 ```
 
 
