@@ -1,3 +1,7 @@
+### 1.0.0 [May 9, 2016]
+* Allow times to use subsecond precision
+* Fix getPending returning 0 when enabled
+
 ### 0.0.3 [May 4, 2016]
 * Fix for metrics with more than one dot
 

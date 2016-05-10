@@ -12,7 +12,7 @@ public class Agent {
 	private AgentOptions agentOptions;
 	private Connection connection;
 
-	public static final String VERSION = "0.0.3";
+	public static final String VERSION = "1.0.0";
 
 	public Agent(final AgentOptions agentOptions) {
 		this.agentOptions = agentOptions;
@@ -53,7 +53,7 @@ public class Agent {
 	}
 
 	public int getPending() {
-		if (agentOptions.getEnabled()) {
+		if (!agentOptions.getEnabled()) {
 			return 0;
 		} else {
 			return connection.messages.size();
@@ -103,7 +103,7 @@ public class Agent {
 		try {
 			runnable.run();
 		} finally {
-			gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
+			gauge(metricName, (System.currentTimeMillis() - start) / 1000f * multiplier.floatValue());
 		}
 	}
 
@@ -124,7 +124,7 @@ public class Agent {
 		try {
 			val = callable.call();
 		} finally {
-			gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
+			gauge(metricName, (System.currentTimeMillis() - start) / 1000f * multiplier.floatValue());
 		}
 
 		if (thrown != null) {
@@ -155,7 +155,7 @@ public class Agent {
 				} catch (Exception ex) {
 					thrown = ex;
 				} finally {
-					gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
+					gauge(metricName, (System.currentTimeMillis() - start) / 1000f * multiplier.floatValue());
 				}
 
 				if (thrown != null) {
@@ -185,7 +185,7 @@ public class Agent {
 				try {
 					r.run();
 				} finally {
-					gauge(metricName, (System.currentTimeMillis() - start) / 1000 * multiplier.floatValue());
+					gauge(metricName, (System.currentTimeMillis() - start) / 1000f * multiplier.floatValue());
 				}
 			}
 		}, result);
