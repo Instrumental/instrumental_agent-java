@@ -16,12 +16,12 @@ Add the following to your `pom.xml`:
 </dependency>
 ```
 
-Visit [instrumentalapp.com](https://instrumentalapp.com) and create an account, then initialize the agent with your API key, found in the Docs section.
+Visit [instrumentalapp.com](https://instrumentalapp.com) and create an account, then initialize the agent with your [project API token](https://instrumentalapp.com/docs/tokens).
 
 ```Java
 import com.instrumentalapp.*;
 
-Agent agent = new Agent(new AgentOptions().setApiKey("YOUR_API_KEY").setEnabled(isProduction));
+Agent agent = new Agent(new AgentOptions().setApiKey("PROJECT_API_TOKEN").setEnabled(isProduction));
 ```
 
 You'll probably want something like the above, only enabling the agent in production mode so you don't have development and production data writing to the same value. Or you can setup two projects, so that you can verify stats in one, and release them to production in another.
