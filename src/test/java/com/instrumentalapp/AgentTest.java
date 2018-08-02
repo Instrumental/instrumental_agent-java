@@ -40,11 +40,22 @@ public class AgentTest {
 
     @Test
     public void gaugeTest() {
-        for (int i = 1; i < 20; i++) {
+        for (int i = 0; i < 20; i++) {
             float val = r.nextFloat() * 100;
             agent.gauge("test.gauge", val);
         }
-        // TODO: Assert the number of metrics sent.
+        Assert.assertEquals(20, agent.getPending());
+        Assert.assertTrue(agent.nextMetricToSubmit().startsWith("gauge test.gauge"));
+    }
+
+    @Test
+    public void gaugeBackfillTest() {
+        long timestamp = 1514764800000L; // 2018-01-01 00:00:00 GMT
+        agent.gauge("test.gauge", 1, timestamp, 1);
+        Assert.assertEquals(
+            "gauge test.gauge 1.0 1514764800 1",
+            agent.nextMetricToSubmit()
+        );
     }
 
     @Test
@@ -71,15 +82,16 @@ public class AgentTest {
 
     @Test
     public void incrementTest() {
-        for (int i = 1; i < 20; i++) {
+        for (int i = 0; i < 20; i++) {
             agent.increment("test.increment");
         }
-        // TODO: Assert the number of metrics sent.
+        Assert.assertEquals(20, agent.getPending());
     }
 
     @Test
     public void noticeTest() throws Exception {
         agent.notice("This is a 2 minutes notice from Java", start - 120000, 120000);
+        Assert.assertEquals(1, agent.getPending());
     }
 
     @Test
@@ -87,7 +99,6 @@ public class AgentTest {
         for (int i = 1; i < (Connection.MAX_QUEUE_SIZE + 1); i++) {
             agent.increment("test.increment.nonblocking");
         }
-
         Assert.assertFalse("Queue buffer overrun when it shouldn't", agent.isQueueOverflowing());
     }
 }

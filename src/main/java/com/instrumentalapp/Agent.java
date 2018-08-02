@@ -52,6 +52,10 @@ public class Agent {
 		}
 	}
 
+        public String nextMetricToSubmit() {
+                return connection.messages.peek();
+        }
+
 	public int getPending() {
 		if (!agentOptions.getEnabled()) {
 			return 0;
