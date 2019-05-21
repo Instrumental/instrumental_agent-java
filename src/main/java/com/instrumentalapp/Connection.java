@@ -74,7 +74,7 @@ public final class Connection implements Runnable {
 						break;
 					}
 				} catch (IllegalArgumentException iae) {
-					LOG.severe(iae.toString());
+					LOG.warning(iae.toString());
 					send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis(), 1).toString(), false);
 				} finally {
 					streamLock.unlock();
@@ -120,7 +120,7 @@ public final class Connection implements Runnable {
 				}
 			} catch (IllegalArgumentException iae) {
 				// Illegally formatted command.
-				LOG.severe(iae.toString());
+				LOG.warning(iae.toString());
 				send(new Metric(Metric.Type.INCREMENT, "agent.invalid_metric", 1, System.currentTimeMillis(), 1).toString(), false);
 			}
 		}
@@ -256,7 +256,7 @@ public final class Connection implements Runnable {
 				try {
 					worker.join(10000);
 				} catch (InterruptedException ie) {
-					LOG.severe("Failed to cleanly shutdown the Connection");
+					LOG.warning("Failed to cleanly shutdown the Connection");
 				}
 			}
 			streamLock.lock();
@@ -273,7 +273,7 @@ public final class Connection implements Runnable {
 		// Do a reconnect, then try to send the message again.
 		// Since we've removed the message from the queue, don't discard it, and don't advance.
 		long delay = (long) Math.min(maxReconnectDelay, Math.pow(errors++, reconnectBackoff) * 1000);
-		LOG.severe("Connection failed to " + agentOptions.getHost() + ":" + agentOptions.getPort() + ". Retry in " + delay + "ms");
+		LOG.warning("Connection failed to " + agentOptions.getHost() + ":" + agentOptions.getPort() + ". Retry in " + delay + "ms");
 		Thread.sleep(delay);
 	}
 
