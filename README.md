@@ -79,9 +79,10 @@ We are here to help. Email us at [support@instrumentalapp.com](mailto:support@in
 8. Tag version: `git tag 'vX.Y.Z' && git push --tags`
 9. `eval $(gpg-agent --daemon)`
 10. `gpg --use-agent --armor --detach-sign` and press ^C after authenticating
-11. `mvn clean deploy`
-12. Use the git tag and make a new release with `target/instrumental_agent-*` attached, https://github.com/instrumental/instrumental_agent-java/tags
-13. Refresh documentation on instrumentalapp.com
+11. Until maven gpg 1.7 is released, you may need to do this instead: `gpg --use-agent --armor --detach-sign --output $(mktemp) pom.xml`
+12. `mvn clean deploy`
+13. Use the git tag and make a new release with `target/instrumental_agent-*` attached, https://github.com/instrumental/instrumental_agent-java/tags
+14. Refresh documentation on instrumentalapp.com
 
 
 ## Version Policy
