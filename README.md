@@ -84,6 +84,34 @@ We are here to help. Email us at [support@instrumentalapp.com](mailto:support@in
 13. Use the git tag and make a new release with `target/instrumental_agent-*` attached, https://github.com/instrumental/instrumental_agent-java/tags
 14. Refresh documentation on instrumentalapp.com
 
+## If you have never released before
+
+Somewhere around the gpg step in the release process, things will break unless you have all the right bits twiddled:
+
+1. Install gnupg `brew install gnupg`
+1. If you don't have a key in gpg, `gpg --gen-key`
+1. Look at your key `gpg --list-secret-keys`
+1. Send that key to ubuntu using the ID from the previous step: `gpg --keyserver hkp://keyserver.ubuntu.com:80 --send-keys YOURKEYIDGOESHERE`
+1. Create a settings.xml file in ~/.m2/settings.xml that looks like this:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd">
+
+  <servers>
+    <server>
+      <id>ossrh</id>
+      <username>YOURUSERNAMEHERE</username>
+      <password>YOURPASSWORDHERE</password>
+    </server>
+  </servers>
+</settings>
+```
+
+After doing all this, if you get an error indicating that your credentials are not working, talk to @esquivalient.
+
 
 ## Version Policy
 
