@@ -1,3 +1,6 @@
+### 1.0.1 [May 21, 2019]
+* Change log level of a few non-fatal (and in many cases auto-retried) errors from SEVERE to WARN
+
 ### 1.0.0 [May 9, 2016]
 * Allow times to use subsecond precision
 * Fix getPending returning 0 when enabled
